@@ -8,6 +8,7 @@ class User(models.Model):
     phone_number = models.CharField(max_length=30)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    cart = models.OneToOneField('Cart', on_delete=models.CASCADE)
     
     class Meta:
         db_tables = 'users'
