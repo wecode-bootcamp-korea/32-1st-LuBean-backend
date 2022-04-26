@@ -11,4 +11,6 @@ class User(models.Model):
     cart = models.OneToOneField('Cart', on_delete=models.CASCADE)
     
     class Meta:
-        db_tables = 'users'
+        db_table = 'users'
+        
+        
