@@ -21,6 +21,8 @@ class Product(models.Model):
     label        = models.CharField(max_length=45, blank=True)
     price        = models.DecimalField(max_digits=10, decimal_places=2)
     category     = models.ManyToManyField('Category', through='ProductCategory')
+    detail       = models.TextField(max_length=2000, blank=True)
+    photo_desc   = models.CharField(max_length=50, blank=True)
     cart         = models.ForeignKey('carts.Cart', on_delete=models.CASCADE, null=True)
     
     class Meta:
