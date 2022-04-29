@@ -1,13 +1,13 @@
 from django.db import models
 
-class Cart(models.Model):
+class OrderItem(models.Model):
     quantity       = models.PositiveIntegerField()
     user           = models.ForeignKey("users.User", on_delete=models.CASCADE)
     order          = models.ForeignKey("Order", on_delete=models.CASCADE, null=True)
     price          = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     
     class Meta:
-        db_table = 'carts'
+        db_table = 'orderitems'
         
 class Order(models.Model):
     user         = models.ForeignKey("users.User", on_delete=models.CASCADE)

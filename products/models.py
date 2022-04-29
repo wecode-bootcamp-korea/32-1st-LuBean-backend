@@ -23,7 +23,7 @@ class Product(models.Model):
     category          = models.ManyToManyField('Category', through='ProductCategory')
     detail            = models.TextField(blank=True)
     photo_description = models.CharField(max_length=50, blank=True)
-    cart              = models.ForeignKey('carts.Cart', on_delete=models.CASCADE, null=True)
+    cart              = models.ForeignKey('carts.OrderItem', on_delete=models.CASCADE, null=True)
     
     class Meta:
         db_table = 'products'
