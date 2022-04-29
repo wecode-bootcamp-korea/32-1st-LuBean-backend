@@ -1,9 +1,11 @@
-from .validation import validate_email, validate_password
-from my_settings import SECRET_KEY, ALGORITHM
-from django.http import JsonResponse
-from django.views import View
-from users.models import User
 import json, bcrypt, jwt
+
+from .validation            import validate_email, validate_password
+from my_settings            import SECRET_KEY, ALGORITHM
+from django.core.exceptions import ValidationError
+from django.http            import JsonResponse
+from django.views           import View
+from users.models           import User
 
 
 class SignUpView(View):
@@ -39,6 +41,9 @@ class SignUpView(View):
         except ValidationError as error:
             return JsonResponse({"message" : error.message}, status = 400)
         
+        except json.JSONDecodeError as error:
+            return JsonResponse({"message" : error.message}, status = 400)
+        
         
 class LogInView(View):
     def post(self, request):
@@ -46,9 +51,9 @@ class LogInView(View):
         data = json.loads(request.body)
         
         try:
-            log_id = data.get('email', None)
+            email = data.get('email', None)
             
-            user = User.objects.get(email = log_id)
+            user = User.objects.get(email = email)
             
             if not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
                 return JsonResponse({"message" : "INVALID_PASSWORD"}, status=401)
