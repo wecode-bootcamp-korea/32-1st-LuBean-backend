@@ -15,13 +15,15 @@ class Menu(models.Model):
         db_table = 'menus'
         
 class Product(models.Model):
-    name         = models.CharField(max_length=45)
-    country_name = models.CharField(max_length=45, blank=True)
-    weight       = models.CharField(max_length=45, blank=True)
-    label        = models.CharField(max_length=45, blank=True)
-    price        = models.DecimalField(max_digits=10, decimal_places=2)
-    category     = models.ManyToManyField('Category', through='ProductCategory')
-    cart         = models.ForeignKey('carts.Cart', on_delete=models.CASCADE, null=True)
+    name              = models.CharField(max_length=45)
+    country_name      = models.CharField(max_length=45, blank=True)
+    weight            = models.CharField(max_length=45, blank=True)
+    label             = models.CharField(max_length=45, blank=True)
+    price             = models.DecimalField(max_digits=10, decimal_places=2)
+    category          = models.ManyToManyField('Category', through='ProductCategory')
+    detail            = models.TextField(blank=True)
+    photo_description = models.CharField(max_length=50, blank=True)
+    cart              = models.ForeignKey('carts.Cart', on_delete=models.CASCADE, null=True)
     
     class Meta:
         db_table = 'products'
