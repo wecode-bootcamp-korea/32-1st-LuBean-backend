@@ -1,11 +1,13 @@
 import json, bcrypt, jwt
 
-from .validation            import validate_email, validate_password
-from my_settings            import SECRET_KEY, ALGORITHM
 from django.core.exceptions import ValidationError
 from django.http            import JsonResponse
 from django.views           import View
-from users.models           import User
+
+from .validation import validate_email, validate_password
+from my_settings import SECRET_KEY, ALGORITHM
+
+from users.models import User
 
 
 class SignUpView(View):
@@ -22,7 +24,7 @@ class SignUpView(View):
             validate_password(password)
             
             if User.objects.filter(email = email).exists():
-                return JsonResponse({'message':'EMAIL_ALREADY_EXISTS'}, status = 400)
+                return JsonResponse({'message':'EMAIL_ALREADY_EXISTS'}, status = 404)
             
             hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             
