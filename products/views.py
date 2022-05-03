@@ -5,13 +5,15 @@ from django.views     import View
 
 from products.models import Product
 
+    
 class ProductListView(View):
-    def get(self, request):        
+    def get(self, request):
         sub_category_id   = request.GET.get('sub_category', None)
         sort_by           = request.GET.get('sort_by', None)
+        country_name      = request.GET.get('country_name', None)
         
         if sub_category_id:
-                products = products.filter(sub_category_id = sub_category_id)
+            products = products.filter(sub_category_id = sub_category_id)
         
         sort_by_options = {
             "ascent"         : "korean_name",
@@ -20,6 +22,9 @@ class ProductListView(View):
         
         q = Q()
         
+        if country_name:
+            q &= Q(product_country_name = country_name)
+            
         products = Product.objects.filter(q).order_by(sort_by_options.get(sort_by))
             
         product_list = [{
@@ -33,7 +38,18 @@ class ProductListView(View):
         }for product in products]
         
         return JsonResponse({'product_list_data': product_list}, status=200)
-    
+
+
+class CountryView(View):
+    def get(self, request):
+        products = Product.objects.all()
+        sub_categories = products.country_name
+        
+        country_list = [
+            {
+                
+            }
+        ]
         
 class ProductDetailView(View):
     def get(self, request, product_id):
@@ -50,7 +66,7 @@ class ProductDetailView(View):
                 'product_weight' : product.weight,
                 'product_detail' : product.detail,
                 'image_url'      : [image.image_url for image in product.image_set.all()],
-                # 'image_info'     : [image.image_info for image in product.image_set.all()]
+                'image_info'     : [image.image_info for image in product.image_set.all()]
             }
         ]
         
