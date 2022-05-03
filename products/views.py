@@ -3,7 +3,54 @@ from django.http      import JsonResponse
 from django.db.models import Q
 from django.views     import View
 
-from products.models import Product
+from products.models import Product, Menu, Category
+
+class MenuView(View):
+    def get(self, request):
+        menus = Menu.objects.all()
+        
+        menu_list = [
+            {
+                "menu_id"   : menu.id,
+                "menu_name" : menu.name,
+                "category_list" : [{
+                    "category_id" : category.id,
+                    "category_name"     : category.name,
+                    "sub_category_name" : category.sub_category
+                } for category in menu.category_set.all()]
+            } for menu in menus
+        ]
+        
+        return JsonResponse({"result" : menu_list}, status = 200)
+
+    
+class CategoryView(View):
+    def get(self, request):
+        categories = Category.objects.all()
+        
+        category_list = [
+            {
+                "category_id"   : category.id,
+                "category_name" : category.name
+            } for category in categories
+        ]
+        
+        return JsonResponse({"result" : category_list}, status = 200)
+
+
+class SubCategoryView(View):
+    def get(self, request):
+        categories = Category.objects.all()
+        
+        sub_category_list = [
+            {
+                "category_id"       : category.id,
+                "sub_category_name" : category.sub_category,
+                "sub_detail"        : category.sub_detail
+            } for category in categories
+        ]
+        
+        return JsonResponse({"result" : sub_category_list}, status = 200)
 
     
 class ProductListView(View):
@@ -40,16 +87,15 @@ class ProductListView(View):
         return JsonResponse({'product_list_data': product_list}, status=200)
 
 
-class CountryView(View):
-    def get(self, request):
-        products = Product.objects.all()
-        sub_categories = products.country_name
-        
-        country_list = [
-            {
+# class CountryListView(View):
+#     def get(self, request):
+#         products = Product.objects.all()
+
+#         country_list = [
+#             {
                 
-            }
-        ]
+#             }
+#         ]
         
 class ProductDetailView(View):
     def get(self, request, product_id):
