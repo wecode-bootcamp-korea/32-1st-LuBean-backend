@@ -52,53 +52,34 @@ class SubCategoryView(View):
         
         return JsonResponse({"result" : sub_category_list}, status = 200)
 
-class MainView(View):
-    def get(self, request):
-        offset = int(request.GET.get('offset', 0))
-        limit  = int(request.GET.get('limit', 12))
-        label  = request.GET.get('label', 'new')
-
-        q = Q()
-
-        if label:
-            q &= Q(label =label)
-
-        products = Product.objects.filter(q)[offset:offset+limit]
-
-        product_list = [
-             {
-            'product_id'     : product.id,
-            'korean_name'    : product.korean_name,
-            'english_name'   : product.english_name,
-            'product_label'  : product.label,
-            'country_name'   : product.country_name,
-            'product_weight' : product.weight,
-            'product_price'  : product.price,
-            } for product in products
-        ]
-        return JsonResponse({'product_list_data' : product_list}, status = 200)
-
-
 class ProductListView(View):
     def get(self, request):
-        category_id       = request.GET.get('category_id', None)
-        sort_by           = request.GET.get('sort_by', 'low_price')
-        country_name      = request.GET.get('country_name', None)
+        sort_by      = request.GET.get('sort_by', 'alphabetic_order')
         
-        if category_id:
-            products = Product.objects.filter(category__id = category_id)
+        category_id  = request.GET.get('category_id', None)
+        country_name = request.GET.get('country_name', None)
+        label        = request.GET.get('label', None)
+        
+        offset       = int(request.GET.get('offset', 0))
+        limit        = int(request.GET.get('limit', 12))
         
         sort_by_options = {
-            "alphabetic_order"         : "korean_name",
-            "low_price"                : "price"
+            "alphabetic_order" : "korean_name",
+            "low_price"        : "price"
         }
         
         q = Q()
         
+        if category_id:
+            q &= Q(category__id = category_id)        
+        
         if country_name:
             q &= Q(country_name = country_name)
+            
+        if label:
+            q &= Q(label =label)
         
-        products = Product.objects.filter(q).order_by(sort_by_options.get(sort_by))
+        products = Product.objects.filter(q).order_by(sort_by_options.get(sort_by, "alphabetic_order"))[offset:offset+limit]
             
         product_list = [{
             'sub_category_id': product.category.id,
@@ -135,4 +116,3 @@ class ProductDetailView(View):
         ]
         
         return JsonResponse({'product_detail_data': product_detail_list},status=200)
-    
