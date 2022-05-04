@@ -1,5 +1,4 @@
 from django.db import models
-
 class Category(models.Model):
     name         = models.CharField(max_length = 45)
     menu         = models.ForeignKey('Menu', on_delete=models.CASCADE)
@@ -21,19 +20,25 @@ class Product(models.Model):
     country_name      = models.CharField(max_length=45, blank=True)
     weight            = models.CharField(max_length=45, blank=True)
     label             = models.CharField(max_length=45, blank=True)
-    price             = models.DecimalField(max_digits=10, decimal_places=2)
-    category          = models.ManyToManyField('Category', through='ProductCategory')
+    price             = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    category          = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
     detail            = models.TextField(blank=True)
-    orderitem         = models.ForeignKey('orderitems.OrderItem', on_delete=models.CASCADE, null=True)
-    
+    country           = models.ForeignKey('Country', on_delete=models.CASCADE, null=True)
+
     class Meta:
         db_table = 'products'
-        
+
+class Country(models.Model):
+    name = models.CharField(max_length=50, blank=True)
+
+    class Meta:
+        db_table = 'countries'
+
 class Image(models.Model):
-    image_url  = models.CharField(max_length=2000)
+    image_url  = models.CharField(max_length=2000, blank=True)
     image_info = models.CharField(max_length=200, blank=True)
     product    = models.ForeignKey('Product', on_delete=models.CASCADE)
-    
+
     class Meta:
         db_table = 'images'
         
