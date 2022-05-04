@@ -1,8 +1,9 @@
 from django.db import models
+
 class Category(models.Model):
-    name         = models.CharField(max_length = 45)
+    name         = models.CharField(max_length=45)
     menu         = models.ForeignKey('Menu', on_delete=models.CASCADE)
-    sub_category = models.CharField(max_length = 45, blank=True)
+    sub_category = models.CharField(max_length=45, blank=True)
     sub_detail   = models.CharField(max_length=100, blank=True)
     
     class Meta:
