@@ -14,7 +14,7 @@ class MenuView(View):
                 "menu_id"   : menu.id,
                 "menu_name" : menu.name,
                 "category_list" : [{
-                    "category_id" : category.id,
+                    "category_id"       : category.id,
                     "category_name"     : category.name,
                     "sub_category_name" : category.sub_category
                 } for category in menu.category_set.all()]
@@ -98,9 +98,6 @@ class ProductListView(View):
         if country_name:
             q &= Q(country_name = country_name)
         
-        # if category_id:
-        #     q &= Q(category_id = category_id)
-                   
         products = Product.objects.filter(q).order_by(sort_by_options.get(sort_by))
             
         product_list = [{
