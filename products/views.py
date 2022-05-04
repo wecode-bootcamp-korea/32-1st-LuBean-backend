@@ -98,8 +98,9 @@ class ProductListView(View):
         
 class ProductDetailView(View):
     def get(self, request, product_id):
+        
         if not Product.objects.filter(id = product_id).exists:
-            return JsonResponse({'message' : 'DOES_NOT_EXIST'}, status = 401)
+            return JsonResponse({'message' : 'DOES_NOT_EXIST'}, status = 400)
         
         product = Product.objects.get(id = product_id)
         
