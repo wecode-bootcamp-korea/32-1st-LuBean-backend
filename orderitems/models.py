@@ -5,6 +5,7 @@ class OrderItem(models.Model):
     user           = models.ForeignKey("users.User", on_delete=models.CASCADE)
     order          = models.ForeignKey("Order", on_delete=models.CASCADE, null=True)
     total          = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    product        = models.ForeignKey("products.Product", on_delete=models.CASCADE, null=True)
     
     class Meta:
         db_table = 'orderitems'
